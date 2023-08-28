@@ -56,7 +56,7 @@ Response
 1. Clone Repository
 
    ```
-   git clone https://github.com/your-username/ECommerceApp.git
+   git clone https://github.com/RohitSh26/ECommerceApp.git
    ```
 
 2. Navigate to directory
