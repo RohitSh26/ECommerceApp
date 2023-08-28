@@ -17,7 +17,7 @@ namespace ECommerceApp.CatalogueService.Models
 
         [Required]
         [Column(TypeName = "decimal(18,2)")]
-        public decimal DisountAmount { get; set; }
+        public decimal Amount { get; set; }
         #endregion
     }
 }
