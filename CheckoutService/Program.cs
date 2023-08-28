@@ -1,6 +1,7 @@
 #region References
 using ECommerceApp.CatalogueService.Data;
 using ECommerceApp.CatalogueService.Interfaces;
+using ECommerceApp.CatalogueService.Services;
 using Microsoft.EntityFrameworkCore;
 #endregion
 
@@ -9,6 +10,14 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddDbContext<CatalogueDbContext>(options =>
     options.UseInMemoryDatabase("WatchCatalogueDB"));
+
+// Register Catalogue Services
+builder.Services.AddScoped<IWatchCatalogueRepository, WatchCatalogueRepository>();
+builder.Services.AddScoped<IWatchCatalogueService, WatchCatalogueService>();
+
+// Register Data Seeder
+builder.Services.AddSingleton<ICatalogueDataSeeder, CatalogueDataSeeder>();
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
