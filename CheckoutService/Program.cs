@@ -2,6 +2,8 @@
 using ECommerceApp.CatalogueService.Data;
 using ECommerceApp.CatalogueService.Interfaces;
 using ECommerceApp.CatalogueService.Services;
+using ECommerceApp.DiscountService.Interfaces;
+using ECommerceApp.DiscountService.Services;
 using Microsoft.EntityFrameworkCore;
 #endregion
 
@@ -14,6 +16,9 @@ builder.Services.AddDbContext<CatalogueDbContext>(options =>
 // Register Catalogue Services
 builder.Services.AddScoped<IWatchCatalogueRepository, WatchCatalogueRepository>();
 builder.Services.AddScoped<IWatchCatalogueService, WatchCatalogueService>();
+
+// Register Discount Service
+builder.Services.AddScoped<IDiscountSvc, DiscountSvc>();
 
 // Register Data Seeder
 builder.Services.AddSingleton<ICatalogueDataSeeder, CatalogueDataSeeder>();
