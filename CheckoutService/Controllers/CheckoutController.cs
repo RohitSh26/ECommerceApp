@@ -2,6 +2,7 @@
 #region References
 using ECommerceApp.CatalogueService.Interfaces;
 using ECommerceApp.CheckoutService.Dtos;
+using ECommerceApp.DiscountService.Dtos;
 using ECommerceApp.DiscountService.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 #endregion
@@ -38,8 +39,35 @@ namespace ECommerceApp.CheckoutService.Controllers
                 return BadRequest("The watchIds list cannot be null or empty.");
             }
 
-            // TODO - Implement later
-            return Ok(new CheckoutResponseDto() { Price = 0.0m });
+            // Count each watch ID passed in the request
+            var watchIdCounts = watchIds.GroupBy(id => id)
+                                        .ToDictionary(group => group.Key, group => group.Count());
+
+
+            // Fetch unique watch types based on IDs provided in the request
+            var watchTypes = watchCatalogueService.GetWatchesByIds(watchIds.Distinct().ToList());
+
+            // Check if all watches exist in the catalogue, there us a watch that is not part of watch repository
+            if (watchTypes.Count != watchIdCounts.Keys.Count)
+            {
+                logger.LogWarning("One or more watches were not found.");
+                return NotFound("One or more watches were not found.");
+            }
+
+            // Create DiscountRequests based on the watch types and their counts
+            var discountRequests = watchTypes.Select(w => new DiscountRequestDto
+            {
+                UnitPrice = w.UnitPrice,
+                QuantityOrdered = watchIdCounts[w.WatchId],
+                DiscountAmount = w.SpecialDiscount?.Amount,
+                DiscountEligibleQuantity = w.SpecialDiscount?.Quantity
+            }).ToList();
+
+            var totalPrice = discountSvc.CalculateTotalDiscountedPrice(discountRequests);
+            logger.LogInformation($"Total price {totalPrice} for Watch Ids: {string.Join(",", watchIds)}");
+
+            var response = new CheckoutResponseDto { Price = totalPrice };
+            return Ok(response);
         }
         #endregion
 

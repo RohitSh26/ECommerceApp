@@ -5,9 +5,9 @@ namespace ECommerceApp.DiscountService.Dtos
     {
         #region Properties
         public decimal UnitPrice { get; set; }
-        public int Quantity { get; set; }
+        public int QuantityOrdered { get; set; }
         public decimal? DiscountAmount { get; set; }
-        public int? DiscountQuantity { get; set; }
+        public int? DiscountEligibleQuantity { get; set; }
         #endregion
     }
 }
